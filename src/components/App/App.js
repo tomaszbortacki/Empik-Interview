@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
-import "./App.css";
+import AddToCart from "../AddToCart/AddToCart";
+import "./App.scss";
 
 const getProductsFromApi = async () => {
   return await fetch(api.CART).then((resp) => resp.json());
@@ -21,10 +22,11 @@ const App = () => {
     <div className="container">
       <h3>Lista produktów</h3>
       <ul>
-        {products.map((product) => {
+        {products.map(({ pid, name, price, min, max, isBlocked }) => {
           return (
-            <li key={product.pid} className="row">
-              {product.name}, cena: {parseFloat(product.price).toFixed(2)}zł
+            <li key={pid} className="row">
+              {name}, cena: {parseFloat(price).toFixed(2)}zł
+              <AddToCart min={min} max={max} isBlocked={isBlocked} />
             </li>
           );
         })}

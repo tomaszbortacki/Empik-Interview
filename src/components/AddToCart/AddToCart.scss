@@ -1,0 +1,17 @@
+.add-to-cart {
+  button {
+    --button-width: 30px;
+    width: var(--button-width);
+    height: var(--button-width);
+    cursor: pointer;
+    margin-right: 0.2rem;
+
+    &:last-of-type {
+      margin-right: 0.5rem;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
