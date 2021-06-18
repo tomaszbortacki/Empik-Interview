@@ -27,7 +27,7 @@ const AddToCart = ({ pid, min, max, isBlocked }) => {
           }
         })
         .catch((err) => console.error(err));
-    }, 300)
+    }, 500)
   );
 
   const changeQty = (e) => {
@@ -35,7 +35,7 @@ const AddToCart = ({ pid, min, max, isBlocked }) => {
 
     const oldQty = parseInt(e.target.value);
     const newQty = quantity + oldQty;
-    if (newQty >= min - 100 && newQty <= max) setQuantity(newQty);
+    if (newQty >= min && newQty <= max) setQuantity(newQty);
   };
 
   useEffect(() => {
