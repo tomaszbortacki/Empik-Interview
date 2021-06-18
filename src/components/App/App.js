@@ -26,7 +26,7 @@ const App = () => {
           return (
             <li key={pid} className="row">
               {name}, cena: {parseFloat(price).toFixed(2)}zł
-              <AddToCart min={min} max={max} isBlocked={isBlocked} />
+              <AddToCart pid={pid} min={min} max={max} isBlocked={isBlocked} />
             </li>
           );
         })}

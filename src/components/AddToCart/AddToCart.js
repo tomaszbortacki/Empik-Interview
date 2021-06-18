@@ -1,24 +1,56 @@
-import React, { useState } from "react";
+import { debounce } from "lodash";
+import React, { useEffect, useRef, useState } from "react";
+import api from "../../utils/api";
 import "./AddToCart.scss";
 
-const AddToCart = ({ min, max, isBlocked }) => {
-  const [count, setCount] = useState(0);
+const AddToCart = ({ pid, min, max, isBlocked }) => {
+  const [quantity, setQuantity] = useState(min);
 
-  const checkIfCanBeChange = (val) => {
+  const debounced = useRef(
+    debounce((qty) => {
+      const data = {
+        pid,
+        quantity: qty,
+      };
+      fetch(api.PRODUCT_CHECK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (!data.success) {
+            console.error(data.message);
+            setQuantity(min);
+          }
+        })
+        .catch((err) => console.error(err));
+    }, 300)
+  );
+
+  const changeQty = (e) => {
     if (isBlocked) return;
-    const newValue = count + val;
-    newValue >= min - 1 && newValue <= max ? setCount(newValue) : "";
+
+    const oldQty = parseInt(e.target.value);
+    const newQty = quantity + oldQty;
+    if (newQty >= min - 100 && newQty <= max) setQuantity(newQty);
   };
+
+  useEffect(() => {
+    debounced.current(quantity);
+  }, [quantity]);
 
   return (
     <section className="add-to-cart">
-      <button onClick={() => checkIfCanBeChange(1)} disabled={isBlocked}>
+      <button onClick={changeQty} value="1" disabled={isBlocked}>
         +
       </button>
-      <button onClick={() => checkIfCanBeChange(-1)} disabled={isBlocked}>
+      <button onClick={changeQty} value="-1" disabled={isBlocked}>
         -
       </button>
-      <span>Obecnie masz {count} sztuk produktu</span>
+      <span>Obecnie masz {quantity} sztuk produktu</span>
     </section>
   );
 };
