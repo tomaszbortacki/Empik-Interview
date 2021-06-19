@@ -10,7 +10,7 @@ const CartContextProvider = ({ children }) => {
     setCart((state) => [...state, { pid, price, qty }]);
   };
 
-  const changeCart = (pid, qty) => {
+  const changeProductQuantity = (pid, qty) => {
     setCart((oldCart) => {
       const newCart = oldCart.map((product) => {
         if (product.pid === pid) product.qty = qty;
@@ -21,10 +21,10 @@ const CartContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    let sum = 0;
-    cart.map(({ price, qty }) => {
-      sum += price * qty;
-    });
+    const sum = cart.reduce((acc, { price, qty }) => {
+      return acc + price * qty;
+    }, 0);
+
     setCount(sum);
   }, [cart]);
 
@@ -33,7 +33,7 @@ const CartContextProvider = ({ children }) => {
       value={{
         count,
         initCart,
-        changeCart,
+        changeProductQuantity,
       }}
     >
       {children}

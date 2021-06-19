@@ -1,6 +1,15 @@
+@import "../../utils/basics";
+
 .container {
-  width: 1000px;
+  max-width: 1000px;
+  width: 100%;
   margin: 100px auto 0 auto;
+
+  .cart-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+  }
 
   .row {
     padding: 10px;
@@ -9,5 +18,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media #{$mobileScreen} {
+      flex-direction: column;
+    }
   }
 }
