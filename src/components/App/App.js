@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import CartContextProvider from "../../contexts/CartContextProvider";
 import api from "../../utils/api";
 import AddToCart from "../AddToCart/AddToCart";
+import Cart from "../Cart/Cart";
 import "./App.scss";
 
 const getProductsFromApi = async () => {
@@ -20,17 +22,20 @@ const App = () => {
 
   return (
     <div className="container">
-      <h3>Lista produktów</h3>
-      <ul>
-        {products.map(({ pid, name, price, min, max, isBlocked }) => {
-          return (
-            <li key={pid} className="row">
-              {name}, cena: {parseFloat(price).toFixed(2)}zł
-              <AddToCart pid={pid} min={min} max={max} isBlocked={isBlocked} />
-            </li>
-          );
-        })}
-      </ul>
+      <CartContextProvider>
+        <h3>Lista produktów</h3>
+        <ul>
+          {products.map((product) => {
+            return (
+              <li key={product.pid} className="row">
+                {product.name}, cena: {parseFloat(product.price).toFixed(2)}zł
+                <AddToCart product={product} />
+              </li>
+            );
+          })}
+        </ul>
+        <Cart />
+      </CartContextProvider>
     </div>
   );
 };
