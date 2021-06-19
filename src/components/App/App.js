@@ -13,11 +13,13 @@ const App = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getProductsFromApi().then((data) => {
-      for (const product of data) {
-        setProducts((prevArray) => [...prevArray, product]);
-      }
-    });
+    getProductsFromApi()
+      .then((data) => {
+        for (const product of data) {
+          setProducts((prevArray) => [...prevArray, product]);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
