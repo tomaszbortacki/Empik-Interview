@@ -1,10 +1,13 @@
-import { debounce } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
+import { debounce } from "lodash";
+import { useCart } from "../../contexts/CartContextProvider";
 import api from "../../utils/api";
 import "./AddToCart.scss";
 
-const AddToCart = ({ pid, min, max, isBlocked }) => {
+const AddToCart = ({ product }) => {
+  const { pid, price, min, max, isBlocked } = product;
   const [quantity, setQuantity] = useState(min);
+  const { initCart, changeCart } = useCart();
 
   const debounced = useRef(
     debounce((qty) => {
@@ -39,7 +42,12 @@ const AddToCart = ({ pid, min, max, isBlocked }) => {
   };
 
   useEffect(() => {
+    initCart(pid, price, min);
+  }, []);
+
+  useEffect(() => {
     debounced.current(quantity);
+    changeCart(pid, quantity);
   }, [quantity]);
 
   return (
