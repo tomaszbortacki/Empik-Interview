@@ -1,4 +1,9 @@
+@import "../../utils/basics";
+
 .add-to-cart {
+  @media #{$mobileScreen} {
+    margin: 0.5rem 0;
+  }
   button {
     --button-width: 30px;
     width: var(--button-width);

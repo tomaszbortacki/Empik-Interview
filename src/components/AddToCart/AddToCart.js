@@ -7,38 +7,48 @@ import "./AddToCart.scss";
 const AddToCart = ({ product }) => {
   const { pid, price, min, max, isBlocked } = product;
   const [quantity, setQuantity] = useState(min);
-  const { initCart, changeCart } = useCart();
+  const { initCart, changeProductQuantity } = useCart();
 
-  const debounced = useRef(
-    debounce((qty) => {
-      const data = {
+  const checkProductQtyWithAPI = useRef(
+    debounce(async (qty) => {
+      const body = JSON.stringify({
         pid,
         quantity: qty,
-      };
-      fetch(api.PRODUCT_CHECK, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (!data.success) {
-            console.error(data.message);
-            setQuantity(min);
-          }
-        })
-        .catch((err) => console.error(err));
+      });
+
+      try {
+        const data = await fetch(api.PRODUCT_CHECK, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body,
+        });
+
+        const result = await data.json();
+        if (result.isError) {
+          setQuantity(min);
+          console.error(result.message);
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }, 500)
   );
 
   const changeQty = (e) => {
     if (isBlocked) return;
 
-    const oldQty = parseInt(e.target.value);
-    const newQty = quantity + oldQty;
-    if (newQty >= min && newQty <= max) setQuantity(newQty);
+    setQuantity((oldQuantity) => {
+      const newQuantityValue = parseInt(event.target.value);
+      const newQty = oldQuantity + newQuantityValue;
+
+      if (newQty >= min && newQty <= max) {
+        return newQty;
+      }
+
+      return oldQuantity;
+    });
   };
 
   useEffect(() => {
@@ -46,8 +56,8 @@ const AddToCart = ({ product }) => {
   }, []);
 
   useEffect(() => {
-    debounced.current(quantity);
-    changeCart(pid, quantity);
+    checkProductQtyWithAPI.current(quantity);
+    changeProductQuantity(pid, quantity);
   }, [quantity]);
 
   return (
