@@ -26,7 +26,7 @@ const AddToCart = ({ product }) => {
         .then((resp) => resp.json())
         .then((data) => {
           if (data.isError) {
-            setQuantity(min);
+            if (data.errorType === "INCORRECT_QUANTITY") setQuantity(min);
             console.error(data.message);
           }
         })
