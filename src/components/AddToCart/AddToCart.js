@@ -26,7 +26,7 @@ const AddToCart = ({ product }) => {
         .then((resp) => resp.json())
         .then((data) => {
           if (data.isError) {
-            setQuantity(min);
+            if (data.errorType === "INCORRECT_QUANTITY") setQuantity(min);
             console.error(data.message);
           }
         })
@@ -41,7 +41,7 @@ const AddToCart = ({ product }) => {
       const newQuantityValue = parseInt(event.target.value);
       const newQty = oldQuantity + newQuantityValue;
 
-      if (newQty >= min && newQty <= max) {
+      if (newQty >= min - 100 && newQty <= max) {
         return newQty;
       }
 
