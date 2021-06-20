@@ -41,7 +41,7 @@ const AddToCart = ({ product }) => {
       const newQuantityValue = parseInt(event.target.value);
       const newQty = oldQuantity + newQuantityValue;
 
-      if (newQty >= min - 100 && newQty <= max) {
+      if (newQty >= min && newQty <= max) {
         return newQty;
       }
 
