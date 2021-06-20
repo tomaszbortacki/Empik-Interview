@@ -16,23 +16,21 @@ const AddToCart = ({ product }) => {
         quantity: qty,
       });
 
-      try {
-        const data = await fetch(api.PRODUCT_CHECK, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body,
-        });
-
-        const result = await data.json();
-        if (result.isError) {
-          setQuantity(min);
-          console.error(result.message);
-        }
-      } catch (err) {
-        console.error(err);
-      }
+      await fetch(api.PRODUCT_CHECK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.isError) {
+            setQuantity(min);
+            console.error(data.message);
+          }
+        })
+        .catch((err) => console.log(err));
     }, 500)
   );
 
